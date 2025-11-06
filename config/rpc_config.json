@@ -1,0 +1,154 @@
+{
+  "rpc_tiers": {
+    "tier_1": {
+      "name": "Alchemy Free",
+      "provider": "alchemy",
+      "http_url_env": "ALCHEMY_RPC_URL",
+      "wss_url_env": "ALCHEMY_WSS_URL",
+      "priority": 1,
+      "limits": {
+        "compute_units_per_month": 300000000,
+        "requests_per_second": 25,
+        "is_free": true
+      },
+      "capabilities": {
+        "websocket": true,
+        "archive": false,
+        "trace": false,
+        "mempool": true
+      },
+      "use_for": ["price_data", "mempool_monitoring", "standard_calls"]
+    },
+    
+    "tier_2": {
+      "name": "QuickNode Free",
+      "provider": "quicknode",
+      "http_url_env": "QUICKNODE_RPC_URL",
+      "wss_url_env": "QUICKNODE_WSS_URL",
+      "priority": 2,
+      "limits": {
+        "api_credits_per_month": 10000000,
+        "requests_per_second": 15,
+        "is_free": true
+      },
+      "capabilities": {
+        "websocket": true,
+        "archive": false,
+        "trace": false,
+        "mempool": true
+      },
+      "use_for": ["fallback_standard", "websocket_backup"]
+    },
+    
+    "tier_3": {
+      "name": "Infura Free",
+      "provider": "infura",
+      "http_url_env": "INFURA_RPC_URL",
+      "wss_url_env": "INFURA_WSS_URL",
+      "priority": 3,
+      "limits": {
+        "requests_per_day": 100000,
+        "requests_per_second": 10,
+        "is_free": true
+      },
+      "capabilities": {
+        "websocket": true,
+        "archive": false,
+        "trace": false,
+        "mempool": false
+      },
+      "use_for": ["secondary_fallback", "historical_data"]
+    },
+    
+    "tier_4": {
+      "name": "Polygon Public",
+      "provider": "public",
+      "http_url_env": "POLYGON_PUBLIC_RPC",
+      "wss_url_env": null,
+      "priority": 4,
+      "limits": {
+        "requests_per_second": 5,
+        "is_free": true,
+        "unstable": true
+      },
+      "capabilities": {
+        "websocket": false,
+        "archive": false,
+        "trace": false,
+        "mempool": false
+      },
+      "use_for": ["last_resort_only"],
+      "warning": "Only use when all paid/free tiers exhausted and buffer exists"
+    },
+    
+    "archive_tier": {
+      "name": "Alchemy Archive",
+      "provider": "alchemy",
+      "http_url_env": "ARCHIVE_RPC_URL",
+      "wss_url_env": null,
+      "priority": 5,
+      "limits": {
+        "compute_units_per_call": 500,
+        "expensive": true,
+        "is_free": false
+      },
+      "capabilities": {
+        "websocket": false,
+        "archive": true,
+        "trace": true,
+        "mempool": false
+      },
+      "use_for": ["liquidation_verification", "sandwich_simulation"],
+      "usage_strategy": "only_when_opportunity_confirmed"
+    }
+  },
+  
+  "failover_strategy": {
+    "max_retries_per_tier": 2,
+    "tier_switch_on_errors": [
+      "rate_limit_exceeded",
+      "timeout",
+      "connection_refused",
+      "429",
+      "503"
+    ],
+    "fallback_sequence": ["tier_1", "tier_2", "tier_3", "tier_4"],
+    "enable_auto_recovery": true,
+    "recovery_check_interval_seconds": 60
+  },
+  
+  "cu_optimization": {
+    "enabled": true,
+    "track_usage": true,
+    "alert_at_percentage": 80,
+    "strategies": {
+      "low_priority_calls_tier": "tier_3",
+      "high_priority_calls_tier": "tier_1",
+      "archive_calls_tier": "archive_tier"
+    }
+  },
+  
+  "call_routing": {
+    "mempool_monitoring": "tier_1",
+    "price_quotes": "tier_1",
+    "multicall_batch": "tier_1",
+    "historical_blocks": "tier_3",
+    "liquidation_check": "tier_2",
+    "archive_simulation": "archive_tier"
+  },
+  
+  "websocket_config": {
+    "primary": "tier_1",
+    "fallback": "tier_2",
+    "heartbeat_interval_seconds": 30,
+    "auto_reconnect": true,
+    "max_reconnect_attempts": 5
+  },
+  
+  "monitoring": {
+    "track_response_times": true,
+    "log_failed_requests": true,
+    "alert_on_tier_4_usage": true,
+    "alert_email": "binaraedu20@gmail.com"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "version": "1.0.0",
+  "bot_name": "PolygonMEVBot",
+  
+  "network": {
+    "chain_id": 137,
+    "name": "polygon",
+    "block_time": 2,
+    "confirmation_blocks": 2
+  },
+  
+  "profit_thresholds": {
+    "min_profit_usd": 5,
+    "min_profit_multiplier": 2.0,
+    "gas_buffer_multiplier": 1.5,
+    "slippage_tolerance": 0.5
+  },
+  
+  "gas_settings": {
+    "max_gas_price_gwei": 500,
+    "priority_fee_gwei": 35,
+    "gas_limit_arbitrage": 500000,
+    "gas_limit_flashloan": 800000,
+    "gas_limit_sandwich": 600000,
+    "jit_gas_pricing": true
+  },
+  
+  "mev_boost": {
+    "enabled": true,
+    "min_tip_gwei": 10,
+    "max_tip_gwei": 100,
+    "dynamic_tip": true,
+    "builder_timeout_ms": 500
+  },
+  
+  "strategies": {
+    "direct_arbitrage": {
+      "enabled": true,
+      "min_profit_usd": 5,
+      "max_trade_size_usd": 50000,
+      "priority": 2
+    },
+    "triangular_arbitrage": {
+      "enabled": true,
+      "min_profit_usd": 8,
+      "max_hops": 3,
+      "priority": 3
+    },
+    "flashloan_arbitrage": {
+      "enabled": true,
+      "min_profit_usd": 15,
+      "max_loan_size_usd": 100000,
+      "priority": 4
+    },
+    "sandwich_attack": {
+      "enabled": true,
+      "min_victim_size_usd": 1000,
+      "min_profit_usd": 10,
+      "priority": 5
+    },
+    "liquidation_arbitrage": {
+      "enabled": true,
+      "min_profit_usd": 20,
+      "health_factor_threshold": 1.05,
+      "priority": 4
+    }
+  },
+  
+  "risk_management": {
+    "max_position_size_usd": 100000,
+    "max_daily_loss_usd": 50,
+    "max_failed_tx_before_pause": 1,
+    "enable_auto_kill_switch": true,
+    "buffer_reserve_percentage": 10
+  },
+  
+  "monitoring": {
+    "mempool_enabled": true,
+    "mempool_filter_min_value_usd": 500,
+    "price_update_interval_ms": 100,
+    "health_check_interval_s": 30,
+    "alert_email": "binaraedu20@gmail.com"
+  },
+  
+  "ml_optimization": {
+    "enabled": true,
+    "min_confidence_score": 0.90,
+    "retrain_interval_hours": 24,
+    "use_historical_data": true
+  },
+  
+  "free_tier_optimization": {
+    "aggressive_cu_management": true,
+    "cache_price_data": true,
+    "cache_ttl_seconds": 30,
+    "skip_simulation_below_profit": 10,
+    "use_multicall": true,
+    "multicall_batch_size": 50
+  },
+  
+  "performance": {
+    "max_concurrent_opportunities": 5,
+    "opportunity_timeout_ms": 1000,
+    "enable_async_processing": true,
+    "thread_pool_size": 4
+  }
+}
